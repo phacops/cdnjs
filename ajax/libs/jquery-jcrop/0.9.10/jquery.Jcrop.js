@@ -37,7 +37,7 @@
 
     // Internal Methods {{{
     function px(n) {
-      return Math.round(n) + 'px';
+      return n + 'px';
     }
     function cssClass(cl) {
       return options.baseClass + '-' + cl;
@@ -953,7 +953,7 @@
       //}}}
       function resize(w, h) //{{{
       {
-        $sel.width(Math.round(w)).height(Math.round(h));
+        $sel.width(w).height(h);
       }
       //}}}
       function refresh() //{{{
@@ -1053,11 +1053,9 @@
       //}}}
       function animMode(v) //{{{
       {
-        if (v) {
-          animating = true;
+        if (animating === v) {
           disableHandles();
         } else {
-          animating = false;
           enableHandles();
         }
       } 
@@ -1229,9 +1227,8 @@
         position: 'fixed',
         left: '-120px',
         width: '12px'
-      }).addClass('jcrop-keymgr'),
-
-        $keywrap = $('<div />').css({
+      }),
+          $keywrap = $('<div />').css({
           position: 'absolute',
           overflow: 'hidden'
         }).append($keymgr);
@@ -1340,8 +1337,8 @@
           pcent = 0,
           velocity = options.swingSpeed;
 
-      x1 = animat[0];
-      y1 = animat[1];
+      x = animat[0];
+      y = animat[1];
       x2 = animat[2];
       y2 = animat[3];
 
@@ -1355,10 +1352,10 @@
         return function () {
           pcent += (100 - pcent) / velocity;
 
-          animat[0] = Math.round(x1 + ((pcent / 100) * ix1));
-          animat[1] = Math.round(y1 + ((pcent / 100) * iy1));
-          animat[2] = Math.round(x2 + ((pcent / 100) * ix2));
-          animat[3] = Math.round(y2 + ((pcent / 100) * iy2));
+          animat[0] = x + ((pcent / 100) * ix1);
+          animat[1] = y + ((pcent / 100) * iy1);
+          animat[2] = x2 + ((pcent / 100) * ix2);
+          animat[3] = y2 + ((pcent / 100) * iy2);
 
           if (pcent >= 99.8) {
             pcent = 100;
@@ -1368,7 +1365,6 @@
             queueAnimator();
           } else {
             Selection.done();
-            Selection.animMode(false);
             if (typeof(callback) === 'function') {
               callback.call(api);
             }
